@@ -1,0 +1,3 @@
+---
+ansible_connection: local   # Connection プラグインを利用したターゲットノードへの接続方法を設定(smart - ssh, local - sshを使用しないなど)
+...

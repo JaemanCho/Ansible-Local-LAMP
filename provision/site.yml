@@ -1,0 +1,16 @@
+- name: ansible_local-lamp
+  hosts: 127.0.0.1
+  user: vagrant
+  become: yes
+
+  roles:
+    - common
+    # - repository
+    # - git
+    # - httpd
+    # - vagrantSyncedfolder
+    # - php
+    # - mariadb
+    # - phpMyAdmin
+    # - nodejs
+    # - composer
