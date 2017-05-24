@@ -1,6 +1,6 @@
 ---
 # Selinux のモード変更
-- name: configure / Selinux permissived
+- name: Selinux permissived
   selinux:
     state: disabled
   when : ansible_selinux.status != 'disabled'
@@ -12,20 +12,27 @@
     state: stopped
 
 # ロケールの設定
-- name: main / Setup timezone
+- name: Setup timezone
   timezone:
     name: "Asia/Tokyo"
 
-- name: main / Setup locale
+- name: Setup locale
   command: localectl set-locale LANG=ja_JP.utf8
   register: changed_result
   changed_when: changed_result.rc != 0  # rc : 実行結果失敗時に0以外がア入る
 
 # EPEL リポジトリの設定
-- name: configure / Import EPEL Repository
+- name: Import EPEL Repository
   yum:
     name: epel-release
     state: latest
+    update_cache: yes
+
+# Remi リポジトリの設定
+- name: Import Remi Repository
+  yum:
+    name: http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+    state: present
     update_cache: yes
 
 # yum パッケージのインストール
@@ -41,4 +48,5 @@
     - gcc-c++
     - tree
     - unzip
+    - git
 ...
