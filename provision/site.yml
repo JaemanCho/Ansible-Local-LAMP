@@ -5,12 +5,10 @@
 
   roles:
     - common
-    # - repository
-    # - git
-    # - httpd
-    # - vagrantSyncedfolder
-    # - php
-    # - mariadb
-    # - phpMyAdmin
-    # - nodejs
-    # - composer
+    - httpd
+    - linkRootDocument
+    - php
+    - mariadb
+    - phpMyAdmin
+    - nodejs
+    - composer

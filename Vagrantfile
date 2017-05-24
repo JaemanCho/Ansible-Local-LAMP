@@ -27,6 +27,7 @@ Vagrant.configure("2") do |config|
 
     # Ansible 設定
   config.vm.provision "ansible_local" do |ansible|
+
     ansible.playbook          = "provision/site.yml"    # 必須。VM 上での Playbook のパスを指定。下記、provisioning_pathからの相対パスでも、絶対パスでも可。
     ansible.install           = true                    # Ansible を自動インストールするかどうか。デフォルトは、true。
     ansible.verbose           = true                    # ansible-playbook 実行時に詳細出力するかどうか。vの数が多ければ、より詳細出力になる。（ansible-playbook -v 相当）
