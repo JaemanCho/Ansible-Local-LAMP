@@ -1,0 +1,11 @@
+---
+- name: Install httpd
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - httpd
+    - mod_ssl
+  notify:
+    - Restart HTTP
+...
