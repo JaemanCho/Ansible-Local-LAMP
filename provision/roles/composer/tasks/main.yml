@@ -1,0 +1,16 @@
+---
+# インストーラのダウンロード
+- name: Download composer installer
+  get_url:
+    url: "{{ composer_installer_url }}"
+    dest: "{{ composer_installer_dest }}"
+    checksum: "{{ composer_installer_checksum }}"
+    force: yes
+
+# インストーラのダウンロードして /usr/local/bin に指定してインストール
+- name: Install composer with installer
+  shell: |
+    php {{ composer_installer_dest }} --install-dir={{ composer_install_dir }} --filename=composer
+  args:
+    creates: "{{ composer_install_dir }}/composer"
+...
