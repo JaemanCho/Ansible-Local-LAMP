@@ -1,0 +1,24 @@
+---
+# /var/www/html　チェック
+- name: check html
+  stat:
+    path: /var/www/html
+  register: html
+
+# 既存 document root フォルダ削除
+- name: Remove default root document
+  file:
+    path: /var/www/html
+    state: absent
+  when: html.stat.isdir
+
+# シムリンクの作成 /var/www/html → /vagrant
+- name: Link vagrant root document
+  file:
+    src: /vagrant
+    path: /var/www/html
+    owner: vagrant
+    group: vagrant
+    state: link
+  when: html.stat.isdir
+...
