@@ -1,0 +1,24 @@
+---
+php_version: remi-php70
+php_packages:
+  - php
+  - php-common
+  - php-devel
+  - php-cli
+  - php-gd
+  - php-mbstring
+  - php-mcrypt
+  - php-mysql
+  - php-pdo
+  - php-xdebug
+  - php-xml
+  - php-xmlrpc
+  - php-intl
+  - ImageMagick
+  - ImageMagick-devel
+  - php-pecl-imagick
+  - php-pecl-apc
+  - php-pecl-memcached
+  - php-pgsql
+  - libmcrypt
+...
