@@ -1,0 +1,13 @@
+---
+mariadb_release: 10.3
+
+mariadb_packages:
+  - MariaDB-server
+  - MariaDB-client
+  - MySQL-python
+
+mariadb_root_pass: ansible
+
+mariadb_user_name: admin
+mariadb_user_pass: password
+...

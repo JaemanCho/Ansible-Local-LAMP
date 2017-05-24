@@ -1,0 +1,78 @@
+---
+# MariaDB のリポジトリ登録
+- name: Import repository key
+  yum_repository:
+    name: mariadb
+    description: MariaDB
+    baseurl: http://yum.mariadb.org/{{ mariadb_release }}/centos7-amd64/
+    gpgkey: https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+    gpgcheck: yes
+    file: MariaDB
+
+# MariaDB のインストール
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+    enablerepo: mariadb
+  with_items: "{{ mariadb_packages }}"
+
+# MariaDB の通常起動設定
+- name: Start MariaDB
+  systemd:
+    name: mysql
+    state: started
+    enabled: yes
+
+# MariaDB の root パスワード設定
+- name: Change root password
+  command: mysqladmin -u root password "{{ mariadb_root_pass }}"
+  args:
+    creates: "/var/lib/mysql/.changed_root_pass.lck"  # 指定したファイルが存在しない時に実行
+  register: changed_root_pass
+
+# root パスワード用ロックファイルの配備
+- name: Setup flag file
+  file:
+    path: /var/lib/mysql/.changed_root_pass.lck
+    state: touch
+    mode: 0400
+  when: changed_root_pass.changed
+
+# ユーザーの追加
+- name: Add MariaDB user
+  mysql_user:
+    login_password: "{{ mariadb_root_pass }}"
+    name: "{{ mariadb_user_name }}"
+    password: "{{ mariadb_user_pass }}"
+    host: localhost
+    priv: "*.*:ALL"
+    append_privs: yes
+
+# - name: ~/.my.cnf を配置
+#   template:
+#     src: my.cnf.j2
+#     dest: "{{ lookup('env', 'HOME') }}/.my.cnf"
+#     mode: 0600
+
+# anonymous ユーザー削除
+- name: Delete anonymous user
+  mysql_user:
+    login_password: "{{ mariadb_root_pass }}"
+    name: ""
+    state: absent
+
+# 不要DB削除
+- name: Drop test database
+  mysql_db:
+    login_password: "{{ mariadb_root_pass }}"
+    name: test
+    state: absent
+
+# DBの追加(テスト用)
+- name: Create db
+  mysql_db:
+    login_password: "{{ mariadb_root_pass }}"
+    name: ansible_test
+    state: present
+...
