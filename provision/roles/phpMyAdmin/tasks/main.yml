@@ -1,0 +1,34 @@
+---
+# MariaDB ロール変数ロード
+- name: Load MariaDB variables
+  include_vars: roles/mariadb/vars/main.yml
+
+# phpMyAdmin のインストール
+- name: Install phpMyAdmin
+  yum:
+    name: phpMyAdmin
+    state: present
+    enablerepo: remi-php70
+
+# phpMyAdmin config.inc.php 設定
+- name: Setup config.inc.php
+  template:
+    src: config.inc.php.j2
+    dest: /etc/phpMyAdmin/config.inc.php
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart HTTP
+
+# Apache アクセスファイル設定
+- name: Setup phpMyAdmin.conf
+  copy:
+    src: phpMyAdmin.conf
+    dest: /etc/httpd/conf.d/phpMyAdmin.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart HTTP
+...

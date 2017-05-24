@@ -1,0 +1,82 @@
+# vi /etc/httpd/conf.d/phpmyadmin.conf
+
+※phpmyadmin.conf の編集画面
+
+※セキュリティ向上のために実際のディレクトリの名前とは違うURLを設定します。
+Alias /任意のURL /var/www/New_Name (実際のディレクトリ)
+
+↓ URLを air60v2vrcsxyftm にする場合の例
+
+Alias /air60v2vrcsxyftm /var/www/New_Name
+
+※アクセス制限
+<Directory /var/www/New_Name/>
+ AddDefaultCharset UTF-8
+
+ <IfModule mod_authz_core.c>
+   # Apache 2.4の場合
+   <RequireAny> ← 1つ以上の条件が合えばOKという意味
+　　※全ての条件にマッチしなければ許可しない場合は <RequireAll>
+
+     Require ip 127.0.0.1 ← ipv4のローカル・ループバック・アドレス
+     Require ip ::1　← ipv6のローカル・ループバック・アドレス
+     Require ip 接続を許可するIPアドレスの追記
+   </RequireAny>
+   # .htaccessを有効にする
+   AllowOverride all
+　  # ↓ どこからでもアクセスできるようにする設定(セキュリティが弱くなります)
+   Require all granted
+ </IfModule>
+
+ <IfModule !mod_authz_core.c>
+     # Apache 2.2の場合
+     Order Deny,Allow
+     Deny from All
+     Allow from 127.0.0.1 ← ipv4のローカル・ループバック・アドレス
+     Allow from ::1　← ipv6のローカル・ループバック・アドレス
+     Allow from　接続を許可するIPアドレスを追記　
+     # ↓ どこからでもアクセスできるようにする設定(セキュリティが弱くなります)
+     Allow from All
+ </IfModule>
+</Directory>
+
+<Directory /var/www/New_Name/setup/>
+   <IfModule mod_authz_core.c>
+      # Apache 2.4
+     <RequireAny>
+      # ↓ ローカルからの接続のみ許可の設定
+      Require ip 127.0.0.1
+      Require ip ::1
+     </RequireAny>
+     # .htaccessを有効にする
+     AllowOverride all
+  　  # ↓ どこからでもアクセスできるようにする設定(セキュリティが弱くなります)
+     Require all granted
+   </IfModule>
+   <IfModule !mod_authz_core.c>
+     # Apache 2.2
+     # ↓ ローカルからの接続のみ許可の設定
+     Order Deny,Allow
+     Deny from All
+     Allow from 127.0.0.1
+     Allow from ::1
+   </IfModule>
+</Directory>
+
+<Directory /var/www/New_Name/libraries/>
+ Order Deny,Allow
+ Deny from All
+ Allow from None
+</Directory>
+
+<Directory /var/www/New_Name/setup/lib/>
+ Order Deny,Allow
+ Deny from All
+ Allow from None
+</Directory>
+
+<Directory /var/www/New_Name/setup/frames/>
+ Order Deny,Allow
+ Deny from All
+ Allow from None
+</Directory>
